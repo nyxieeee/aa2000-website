@@ -1,6 +1,30 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { Product, CartItem, DiscountResult } from '../types';
+
+const CART_STORAGE_KEY = 'aa2000-cart';
+
+function loadCartFromStorage(): CartItem[] {
+  try {
+    const stored = localStorage.getItem(CART_STORAGE_KEY);
+    if (!stored) return [];
+    const parsed = JSON.parse(stored);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function loadDiscountState(): { discount: number; appliedCode: string } {
+  try {
+    const stored = localStorage.getItem(`${CART_STORAGE_KEY}-discount`);
+    if (!stored) return { discount: 0, appliedCode: '' };
+    const parsed = JSON.parse(stored);
+    return { discount: Number(parsed?.discount) || 0, appliedCode: String(parsed?.appliedCode ?? '') };
+  } catch {
+    return { discount: 0, appliedCode: '' };
+  }
+}
 
 type ProductToAdd = Product | (Product & { price: number; name: string });
 
@@ -34,9 +58,17 @@ interface CartProviderProps {
 }
 
 export const CartProvider = ({ children }: CartProviderProps) => {
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [discount, setDiscount] = useState(0);
-  const [appliedCode, setAppliedCode] = useState('');
+  const [cart, setCart] = useState<CartItem[]>(loadCartFromStorage);
+  const [discount, setDiscount] = useState(() => loadDiscountState().discount);
+  const [appliedCode, setAppliedCode] = useState(() => loadDiscountState().appliedCode);
+
+  useEffect(() => {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+  }, [cart]);
+
+  useEffect(() => {
+    localStorage.setItem(`${CART_STORAGE_KEY}-discount`, JSON.stringify({ discount, appliedCode }));
+  }, [discount, appliedCode]);
 
   const addToCart = (product: ProductToAdd) => {
     const productData = { ...product } as Product;
@@ -74,7 +106,11 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     return { success: false, message: 'Invalid promo code.' };
   };
 
-  const clearCart = () => setCart([]);
+  const clearCart = () => {
+    setCart([]);
+    setDiscount(0);
+    setAppliedCode('');
+  };
 
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
   const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
