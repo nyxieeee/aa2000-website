@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ShoppingCart, FileText, CheckCircle } from 'lucide-react';
 import { products } from '../data/products';
 import { Link } from 'react-router-dom';
@@ -6,8 +6,20 @@ import { useCart } from '../context/CartContext';
 import { PRODUCT_CATEGORIES } from '../constants';
 import { PageHead } from '../components/ui/PageHead';
 
+const PRODUCT_FILTER_KEY = 'aa2000-products-filter';
+
 const Products = () => {
-  const [filter, setFilter] = useState('All');
+  const [filter, setFilter] = useState(() => {
+    try {
+      return localStorage.getItem(PRODUCT_FILTER_KEY) || 'All';
+    } catch {
+      return 'All';
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem(PRODUCT_FILTER_KEY, filter);
+  }, [filter]);
   const { addToCart } = useCart();
 
   const filteredProducts = filter === 'All'

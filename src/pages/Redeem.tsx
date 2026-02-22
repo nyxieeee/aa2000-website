@@ -2,16 +2,19 @@ import { useState, FormEvent } from 'react';
 import { Gift, Check, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PageHead } from '../components/ui/PageHead';
+import { useCart } from '../context/CartContext';
 
 type RedeemStatus = 'idle' | 'success' | 'error';
 
 const Redeem = () => {
+  const { applyDiscount, appliedCode } = useCart();
   const [code, setCode] = useState('');
-  const [status, setStatus] = useState<RedeemStatus>('idle');
+  const [status, setStatus] = useState<RedeemStatus>(() => (appliedCode ? 'success' : 'idle'));
 
   const handleRedeem = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (code.toLowerCase() === 'aa2000') {
+    const result = applyDiscount(code);
+    if (result.success) {
       setStatus('success');
     } else {
       setStatus('error');
