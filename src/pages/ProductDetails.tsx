@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { products } from '../data/products';
 import { useCart } from '../context/CartContext';
+import { useProducts } from '../context/ProductsContext';
 import { ArrowLeft, ShoppingCart, CheckCircle, Package, Wrench, FileText, Shield } from 'lucide-react';
 import { PageHead } from '../components/ui/PageHead';
 
@@ -9,10 +9,20 @@ const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { getProductById, loading } = useProducts();
   const [includeInstallation, setIncludeInstallation] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
 
-  const product = products.find(p => p.id === parseInt(id ?? '0'));
+  const product = getProductById(parseInt(id ?? '0', 10));
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
+        <PageHead title="Loading…" />
+        <p className="text-slate-600">Loading product…</p>
+      </div>
+    );
+  }
 
   if (!product) {
     return (

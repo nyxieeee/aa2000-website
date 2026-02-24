@@ -19,5 +19,16 @@ export const checkoutSchema = z.object({
   cvv: z.string().min(3, 'CVV must be 3-4 digits'),
 });
 
+export const productSchema = z.object({
+  name: z.string().min(1, 'Product name is required'),
+  category: z.string().min(1, 'Category is required'),
+  price: z.number().min(0, 'Price must be 0 or greater'),
+  description: z.string().min(1, 'Short description is required'),
+  fullDescription: z.string().min(1, 'Full description is required'),
+  image: z.string().url('Enter a valid image URL').or(z.literal('')),
+  installationPrice: z.number().min(0, 'Installation price must be 0 or greater'),
+});
+
 export type ContactFormData = z.infer<typeof contactSchema>;
 export type CheckoutFormData = z.infer<typeof checkoutSchema>;
+export type ProductFormData = z.infer<typeof productSchema>;

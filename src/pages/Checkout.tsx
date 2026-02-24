@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { CreditCard, MapPin, User, ArrowLeft, CheckCircle } from 'lucide-react';
 import { PageHead } from '../components/ui/PageHead';
 import { checkoutSchema, type CheckoutFormData } from '../lib/validations';
+import { submitOrder } from '../lib/api';
 
 const initialFormData: CheckoutFormData = {
   fullName: '',
@@ -23,6 +24,8 @@ const Checkout = () => {
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [formData, setFormData] = useState<CheckoutFormData>(initialFormData);
   const [errors, setErrors] = useState<Partial<Record<keyof CheckoutFormData, string>>>({});
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const target = e.target;
@@ -32,7 +35,7 @@ const Checkout = () => {
     }
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const result = checkoutSchema.safeParse(formData);
     if (!result.success) {
@@ -45,11 +48,37 @@ const Checkout = () => {
       return;
     }
     setErrors({});
-    setOrderPlaced(true);
-    setTimeout(() => {
-      clearCart();
-      navigate('/');
-    }, 3000);
+    setSubmitError(null);
+    setSubmitting(true);
+    try {
+      await submitOrder({
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address,
+        city: formData.city,
+        zipCode: formData.zipCode,
+        subtotal,
+        discountAmount,
+        discountCode: appliedCode || undefined,
+        total: totalPrice,
+        items: cart.map((item) => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+        })),
+      });
+      setOrderPlaced(true);
+      setTimeout(() => {
+        clearCart();
+        navigate('/');
+      }, 3000);
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : 'Failed to submit order. Try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (cart.length === 0 && !orderPlaced) {
@@ -173,11 +202,15 @@ const Checkout = () => {
                 </div>
               </div>
 
+              {submitError && (
+              <p className="text-red-500 text-sm">{submitError}</p>
+            )}
               <button
                 type="submit"
-                className="w-full py-4 bg-aa-blue text-slate-900 rounded-xl font-bold text-lg hover:bg-aa-blue-dark transition-colors shadow-lg shadow-aa-blue/20"
+                disabled={submitting}
+                className="w-full py-4 bg-aa-blue text-slate-900 rounded-xl font-bold text-lg hover:bg-aa-blue-dark transition-colors shadow-lg shadow-aa-blue/20 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Place Order
+                {submitting ? 'Submitting...' : 'Place Order'}
               </button>
             </form>
           </div>

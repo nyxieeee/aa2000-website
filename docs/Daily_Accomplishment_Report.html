@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Accomplishment Report - February 23, 2026</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #1e293b; line-height: 1.5; }
+    h1 { text-align: center; font-size: 1.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 24px; }
+    h2 { color: #2563eb; font-size: 1.1rem; font-weight: 700; margin-top: 24px; margin-bottom: 12px; }
+    h3 { font-size: 1rem; font-weight: 600; margin-top: 16px; margin-bottom: 8px; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    th, td { border: 1px solid #cbd5e1; padding: 8px 12px; text-align: left; }
+    th { background: #f1f5f9; font-weight: 600; }
+    ul { margin: 8px 0; padding-left: 24px; }
+    li { margin: 4px 0; }
+    .meta-table th { width: 120px; }
+    @media print { body { margin: 20px; } }
+  </style>
+</head>
+<body>
+
+<h1>DAILY ACCOMPLISHMENT REPORT</h1>
+
+<table class="meta-table">
+  <tr><th>Field</th><th>Detail</th></tr>
+  <tr><td><strong>Project</strong></td><td>AA2000 Security Website (E-commerce)</td></tr>
+  <tr><td><strong>Date</strong></td><td>February 23, 2026</td></tr>
+  <tr><td><strong>Prepared by</strong></td><td>Clarence A. Portugal</td></tr>
+  <tr><td><strong>Position</strong></td><td>Intern</td></tr>
+</table>
+
+<h2>Summary</h2>
+<p>Accomplishments for the day focused first on converting the project to React (framework/language migration); then implementing the database using MySQL on XAMPP and converting from hardcoded data to database-driven; building the admin panel with product management, database-backed login, dashboard with charts and stat cards, mobile-responsive layout, product filters, and realtime sync; and adding checkout orders to the database with an admin Orders page to view them.</p>
+
+<h2>Accomplishments</h2>
+
+<h3>1. Conversion to React (Framework / Language)</h3>
+<table>
+  <tr><th>Area</th><th>Action</th></tr>
+  <tr><td>Framework migration</td><td>Converted the existing website/project to React (from previous language or framework, e.g. plain HTML/JS or other).</td></tr>
+  <tr><td>Project setup</td><td>Set up React project (e.g. Vite + TypeScript); structured components, pages, and routing for the AA2000 e-commerce site.</td></tr>
+  <tr><td>UI &amp; pages</td><td>Rebuilt or migrated pages (Home, Products, Blogs, etc.) and UI components in React; maintained site structure and content.</td></tr>
+  <tr><td>Base for later work</td><td>This React codebase became the base for adding database, admin panel, and all subsequent features.</td></tr>
+</table>
+
+<h3>2. Database Implementation (MySQL on XAMPP)</h3>
+<table>
+  <tr><th>Area</th><th>Action</th></tr>
+  <tr><td>MySQL / XAMPP</td><td>Set up MySQL via XAMPP: start MySQL in XAMPP Control Panel; created database (e.g. <code>aa2000</code>) for the project.</td></tr>
+  <tr><td>Schema</td><td>Created <code>scripts/schema.sql</code>: <code>products</code> table (id, name, category, price, description, full_description, image, specs, inclusions, installation_price, created_at) and <code>admin_users</code> table (id, username, password_hash, created_at). Run in MySQL (e.g. <code>mysql -u root -p aa2000 &lt; scripts/schema.sql</code>) to create tables.</td></tr>
+  <tr><td>Connection &amp; .env</td><td>Configured <code>.env</code> with MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE, and PORT so the server connects to the local MySQL (XAMPP) instance.</td></tr>
+  <tr><td>Server (Express + mysql2)</td><td>Built <code>server/index.js</code>: Express app with <code>mysql2/promise</code> <code>createPool()</code> using .env; all product and auth data now read/write from MySQL instead of in-memory or hardcoded.</td></tr>
+  <tr><td>Convert code to use DB</td><td>Removed hardcoded products from the codebase; frontend ProductsContext fetches from GET /api/products; admin add/edit/delete call POST/PUT/DELETE /api/products which persist to MySQL; localStorage used only as fallback when API/server is not running.</td></tr>
+</table>
+
+<h3>3. Database &amp; Backend (API &amp; Auth)</h3>
+<table>
+  <tr><th>Item</th><th>Description</th></tr>
+  <tr><td>Products API</td><td>GET /api/products (list), GET /api/products/:id (one), POST (create), PUT /api/products/:id (update), DELETE /api/products/:id; all use MySQL via pool.query.</td></tr>
+  <tr><td>Seed script</td><td>Added <code>npm run seed-admin</code> (runs <code>scripts/seed-admin.js</code>) to create default admin user (username: admin, password: admin) with bcrypt hash in <code>admin_users</code>; run once after schema.</td></tr>
+  <tr><td>Login API</td><td>Added POST /api/auth/login; validates username/password against <code>admin_users</code> table (bcrypt.compare); returns success or 401.</td></tr>
+  <tr><td>Docs</td><td>SETUP-LOCAL.md (or project docs) for steps: XAMPP MySQL on, create DB, run schema, run seed-admin, set .env, run server.</td></tr>
+</table>
+
+<h3>4. Admin Panel &amp; Product Management</h3>
+<table>
+  <tr><th>Area</th><th>Action</th></tr>
+  <tr><td>Admin panel</td><td>Implemented admin section with login; credentials validated against MySQL <code>admin_users</code> table (bcrypt).</td></tr>
+  <tr><td>Products CRUD</td><td>Admin can add, edit, and delete products; data stored in MySQL via API or localStorage when API offline.</td></tr>
+  <tr><td>Hardcoded removal</td><td>Removed all hardcoded products; products list now loaded from API/database only.</td></tr>
+  <tr><td>Products page filter</td><td>Added category filter on admin Products page: All, CCTV, Fire Alarms, Burglar Alarms; table and count update by selected filter.</td></tr>
+</table>
+
+<h3>5. Admin Dashboard</h3>
+<table>
+  <tr><th>Area</th><th>Action</th></tr>
+  <tr><td>Stat cards</td><td>Four cards: Total Products (with “In X categories”), Categories (with avg products each + tags), Catalog value (total + avg per product), Data source (MySQL/Local + Connected/Offline and “X loaded”). Each card shows two metrics.</td></tr>
+  <tr><td>Charts</td><td>Products by category (bar chart, distinct color per category); Category distribution (donut with legend); Top by price (top 5 products list). Wrapped in ErrorBoundary so dashboard still works if charts fail.</td></tr>
+  <tr><td>Responsive</td><td>Stat cards: 2 per row on mobile, 4 on desktop; charts and top-by-price responsive; loading skeletons for stats and charts.</td></tr>
+  <tr><td>Refresh</td><td>Added Refresh button in header; refetchSilent used for background polling (no loading flash).</td></tr>
+</table>
+
+<h3>6. Admin Layout &amp; Mobile</h3>
+<table>
+  <tr><th>Item</th><th>Description</th></tr>
+  <tr><td>Sidebar (desktop)</td><td>Sidebar fixed; only main content area scrolls (h-screen overflow-auto on main, lg:ml-60 for content).</td></tr>
+  <tr><td>Mobile drawer</td><td>Burger menu in header (mobile-only); sidebar slides in as overlay; tap toggles open/close; X to close.</td></tr>
+  <tr><td>Nav</td><td>Dashboard and Products in sidebar; View site and Log out at bottom; active link highlighted (cyan).</td></tr>
+</table>
+
+<h3>7. Login &amp; UX</h3>
+<table>
+  <tr><th>Item</th><th>Description</th></tr>
+  <tr><td>Login form</td><td>Username + password fields; submit calls /api/auth/login; redirect to /admin/dashboard on success.</td></tr>
+  <tr><td>Show/hide password</td><td>Eye icon next to password field; toggles type between password and text.</td></tr>
+  <tr><td>Scrollbars</td><td>Hid all scrollbars site-wide in index.css (scrollbar-width: none; -ms-overflow-style: none; ::-webkit-scrollbar { display: none }); scroll behavior unchanged.</td></tr>
+</table>
+
+<h3>8. Realtime Updates</h3>
+<table>
+  <tr><th>Item</th><th>Description</th></tr>
+  <tr><td>Polling</td><td>Admin layout runs refetchSilent() every 15 seconds so products data stays in sync with API/database.</td></tr>
+  <tr><td>After mutate</td><td>After add, edit, or delete product, refetchSilent() runs so list and dashboard reflect server state immediately.</td></tr>
+  <tr><td>refetchSilent</td><td>Added in ProductsContext; fetches from API and updates state without setting loading (no spinner).</td></tr>
+</table>
+
+<h3>9. Code Quality &amp; Build</h3>
+<table>
+  <tr><th>Type</th><th>Change</th></tr>
+  <tr><td>Context</td><td>ProductsContext: refetchSilent, safe defaults for products; AdminDashboard: safe data for charts (percent ?? 0, etc.).</td></tr>
+  <tr><td>Routes</td><td>Admin routes: /admin (login), /admin/dashboard, /admin/products; AdminLayout wraps dashboard and products.</td></tr>
+  <tr><td>Build</td><td>npm run build passes; recharts + react-is for charts.</td></tr>
+</table>
+
+<h3>10. Checkout &amp; Orders (Database + Admin)</h3>
+<table>
+  <tr><th>Area</th><th>Action</th></tr>
+  <tr><td>Schema</td><td>Added <code>orders</code> table (id, full_name, email, phone, address, city, zip_code, subtotal, discount_amount, discount_code, total, status, created_at) and <code>order_items</code> table (id, order_id, product_id, product_name, price, quantity). Card/CVV/expiry not stored (security).</td></tr>
+  <tr><td>Orders API</td><td>POST /api/orders: accepts customer info + items + totals; inserts into orders and order_items in a transaction. GET /api/orders: list all orders for admin. GET /api/orders/:id: single order with line items.</td></tr>
+  <tr><td>Checkout → DB</td><td>Checkout page now calls submitOrder() with form data and cart items; order is saved to MySQL. On success: confirmation, clear cart, redirect. On failure: error message and submit button re-enabled.</td></tr>
+  <tr><td>Admin Orders</td><td>New page Admin → Orders (/admin/orders): table of orders (ID, date, customer, email, total, status). Expand row to see phone, address, discount, and list of items (product name, qty, line total).</td></tr>
+</table>
+
+<h2>Files Modified</h2>
+<p><em>Lahat ng nasa listahan ay bahagi ng conversion to React at ng kasunod na database/admin work — hindi lang iilang file ang na-edit.</em></p>
+<table>
+  <tr><th>Category</th><th>Files</th></tr>
+  <tr><td><strong>Config / Build</strong></td><td>package.json, vite.config.ts, tsconfig.json, index.html, postcss.config.js, tailwind.config, .env</td></tr>
+  <tr><td><strong>Entry &amp; App</strong></td><td>src/main.tsx, src/App.tsx, src/index.css, src/vite-env.d.ts</td></tr>
+  <tr><td><strong>Layout &amp; Components</strong></td><td>Layout.tsx, Navbar.tsx, Footer.tsx, PageHead.tsx, PageTransition.tsx, PageSkeleton.tsx, ErrorBoundary.tsx, components/index.ts</td></tr>
+  <tr><td><strong>Pages (Public)</strong></td><td>Home.tsx, Products.tsx, ProductDetails.tsx, Blogs.tsx, About.tsx, Contact.tsx, Cart.tsx, Checkout.tsx, Redeem.tsx, pages/index.ts</td></tr>
+  <tr><td><strong>Pages (Admin)</strong></td><td>AdminLogin.tsx, AdminLayout.tsx, AdminDashboard.tsx, AdminProducts.tsx, AdminOrders.tsx</td></tr>
+  <tr><td><strong>Contexts</strong></td><td>ProductsContext.tsx, CartContext.tsx</td></tr>
+  <tr><td><strong>Lib &amp; Utils</strong></td><td>lib/api.ts, lib/validations.ts, lib/animations.ts</td></tr>
+  <tr><td><strong>Types &amp; Constants</strong></td><td>types/index.ts, constants/index.ts, constants/blogs.ts</td></tr>
+  <tr><td><strong>Server</strong></td><td>server/index.js</td></tr>
+  <tr><td><strong>Scripts</strong></td><td>schema.sql, seed-admin.js</td></tr>
+  <tr><td><strong>Docs</strong></td><td>SETUP-LOCAL.md (or project docs)</td></tr>
+</table>
+
+<h2>Notes</h2>
+<ul>
+  <li><strong>Sidebar:</strong> Fixed on desktop; content only scrolls. On mobile, drawer with burger; nav and footer in sidebar. Nav includes Dashboard, Products, Orders.</li>
+  <li><strong>Products:</strong> Data from MySQL when API running; localStorage fallback when offline. Realtime: 15s polling + refetch after add/edit/delete.</li>
+  <li><strong>Charts:</strong> Bar chart (per-category colors), donut, top-by-price list; empty states when no products.</li>
+  <li><strong>Orders:</strong> Checkout submissions are saved to database (orders + order_items). Admin → Orders lists all checkouts; expand row to see items and shipping info.</li>
+</ul>
+
+</body>
+</html>

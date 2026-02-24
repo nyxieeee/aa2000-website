@@ -1,3 +1,11 @@
+# AA2000 Website
+
+React + Vite + TypeScript. E-commerce site for AA2000 Security (CCTV, Fire Alarms, Burglar Alarms).
+
+**Local development with MySQL (XAMPP):** see **[SETUP-LOCAL.md](./SETUP-LOCAL.md)** for step-by-step XAMPP + MySQL setup.
+
+---
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

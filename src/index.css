@@ -27,4 +27,13 @@
   body {
     @apply bg-aa-bg-light text-aa-slate-dark font-sans antialiased;
   }
+
+  /* Hide all scrollbars but keep scrolling */
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  *::-webkit-scrollbar {
+    display: none;
+  }
 }
